@@ -457,6 +457,8 @@ Thumbs.db
 ehthumbs.db
 ehthumbs_vista.db
 *.db
+*.db-shm 
+*.db-wal 
 # Dump file
 *.stackdump
 
