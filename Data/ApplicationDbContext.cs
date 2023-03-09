@@ -11,6 +11,6 @@ public class ApplicationDbContext: DbContext{
     }
     protected override void OnModelCreating(ModelBuilder modelBuilder){
         modelBuilder.Entity<TodoItem>().HasKey(i=>i.Id).HasName("TodoItemId_PrimaryKey");
+        modelBuilder.Entity<TodoItem>().Property(i=>i.IsCompleted).HasDefaultValue(false);
     }
-
 }

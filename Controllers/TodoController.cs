@@ -20,10 +20,10 @@ namespace TODO.Controllers{
         }
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TodoItem>>> GetListTodoItems(){
-            return await  _db.TodoItems.Select(i=> new TodoItem{Id=i.Id,ItemName=i.ItemName,CreatedAt=i.CreatedAt,UpdatedAt=i.UpdatedAt}).ToListAsync();
+            return await  _db.TodoItems.Select(i=> new TodoItem{Id=i.Id,ItemName=i.ItemName,CreatedAt=i.CreatedAt,UpdatedAt=i.UpdatedAt,IsCompleted=i.IsCompleted}).ToListAsync();
         }
         [HttpPost]
-        public async Task<ActionResult> AddTodoItem(TodoItemDto DTOItem){
+        public async Task<ActionResult> AddTodoItem(TodoItemCreateDto DTOItem){
             var Now = DateTime.Now;
             var Item = new TodoItem{ItemName=DTOItem.ItemName,UpdatedAt=Now};
             Console.WriteLine(Item.UpdatedAt);
@@ -40,12 +40,17 @@ namespace TODO.Controllers{
             return Ok(todoItem);
         }
         [HttpPut("{id}")]
-        public async Task<ActionResult> UpdateTodoItem(int id,TodoItemDto DTOitem){
+        public async Task<ActionResult> UpdateTodoItem(int id,TodoItemUpdateDto DTOitem){
             var todoItem = await _db.TodoItems.FindAsync(id);
             if (todoItem == null){
                 return NotFound();
             }
-            todoItem.ItemName = DTOitem.ItemName;
+            if (DTOitem.ItemName != null){
+                todoItem.ItemName = DTOitem.ItemName;
+            }
+            if (DTOitem.IsCompleted != null){
+                todoItem.IsCompleted = (bool)DTOitem.IsCompleted;
+            }
             todoItem.UpdatedAt = DateTime.Now;
             await _db.SaveChangesAsync();
             return Ok();
