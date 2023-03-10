@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace TODO.Controllers{
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/todo/[controller]")]
     public class TodoController : ControllerBase
     {
         private readonly ApplicationDbContext  _db ;
@@ -18,11 +18,11 @@ namespace TODO.Controllers{
         public TodoController(ApplicationDbContext  db){
             _db = db;
         }
-        [HttpGet]
+        [HttpGet("list")]
         public async Task<ActionResult<IEnumerable<TodoItem>>> GetListTodoItems(){
             return await  _db.TodoItems.Select(i=> new TodoItem{Id=i.Id,ItemName=i.ItemName,CreatedAt=i.CreatedAt,UpdatedAt=i.UpdatedAt,IsCompleted=i.IsCompleted}).ToListAsync();
         }
-        [HttpPost]
+        [HttpPost("add")]
         public async Task<ActionResult> AddTodoItem(TodoItemCreateDto DTOItem){
             var Now = DateTime.Now;
             var Item = new TodoItem{ItemName=DTOItem.ItemName,UpdatedAt=Now};
@@ -31,16 +31,16 @@ namespace TODO.Controllers{
             await _db.SaveChangesAsync();
             return CreatedAtAction(nameof(GetDetailTodoItem),new {Id=Item.Id},Item);
         }
-        [HttpGet("{id}")]
-        public async Task<ActionResult> GetDetailTodoItem(int id){
+        [HttpGet("{id}/get")]
+        public async Task<ActionResult> GetDetailTodoItem(Guid id){
             var todoItem = await _db.TodoItems.FindAsync(id);
             if (todoItem == null ){
                 return NotFound();
             }
             return Ok(todoItem);
         }
-        [HttpPut("{id}")]
-        public async Task<ActionResult> UpdateTodoItem(int id,TodoItemUpdateDto DTOitem){
+        [HttpPatch("{id}/patch")]
+        public async Task<ActionResult> UpdateTodoItem(Guid id,TodoItemUpdateDto DTOitem){
             var todoItem = await _db.TodoItems.FindAsync(id);
             if (todoItem == null){
                 return NotFound();
@@ -55,7 +55,7 @@ namespace TODO.Controllers{
             await _db.SaveChangesAsync();
             return Ok();
         }
-        [HttpDelete]
+        [HttpDelete("delete")]
         public async Task<ActionResult> RemoveTodoItem(int id){
             var todoItem = await _db.TodoItems.FindAsync(id);
             if (todoItem == null){
