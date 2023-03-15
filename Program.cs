@@ -16,6 +16,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(
     options =>options.UseSqlite("Data Source=sqlite3.db"),
     optionsLifetime: ServiceLifetime.Singleton
 );
+
 builder.Services.AddIdentityCore<IdentityUser>(options => {
     options.SignIn.RequireConfirmedAccount = false;
     options.User.RequireUniqueEmail = true;
