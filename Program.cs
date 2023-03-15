@@ -1,8 +1,12 @@
-using TODO.Data;
-using Microsoft.EntityFrameworkCore.Sqlite;
 using Microsoft.EntityFrameworkCore;
+using TODO;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.IdentityModel.Tokens;
+using System.Security.Claims;
+using System.Text;
+using System.IdentityModel.Tokens.Jwt;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -16,7 +20,18 @@ builder.Services.AddDbContext<ApplicationDbContext>(
     options =>options.UseSqlite("Data Source=sqlite3.db"),
     optionsLifetime: ServiceLifetime.Singleton
 );
-
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(
+    options=>{
+        options.TokenValidationParameters=new TokenValidationParameters{
+            ValidateIssuer=true,
+            ValidIssuer=AuthOptions.ISSUER,
+            ValidAudience=AuthOptions.AUDIENCE,
+            ValidateLifetime=true,
+            IssuerSigningKey=AuthOptions.GetSymmetricSecurityKey(),
+            ValidateIssuerSigningKey=true
+        };
+    }
+);
 builder.Services.AddIdentityCore<IdentityUser>(options => {
     options.SignIn.RequireConfirmedAccount = false;
     options.User.RequireUniqueEmail = true;
