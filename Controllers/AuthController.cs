@@ -13,7 +13,7 @@ using TODO.Data.DTO;
 namespace TODO.Controllers {
 
     [ApiController]
-    [Route("api/auth/[controller]")]
+    [Route("api/[controller]")]
     public class AuthController: ControllerBase{
         private readonly ApplicationDbContext  _db ;
         private readonly UserManager<IdentityUser> _userManager;

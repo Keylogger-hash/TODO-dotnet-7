@@ -16,7 +16,7 @@ public class ApplicationDbContext: IdentityUserContext<IdentityUser>{
         this.SeedRoles(modelBuilder);
         modelBuilder.Entity<TodoItem>().HasKey(i=>i.Id).HasName("TodoItemId_PrimaryKey");
         modelBuilder.Entity<TodoItem>().Property(i=>i.IsCompleted).HasDefaultValue(false);
-
+        modelBuilder.Entity<>
     }
 
     private void SeedRoles(ModelBuilder modelBuilder){
