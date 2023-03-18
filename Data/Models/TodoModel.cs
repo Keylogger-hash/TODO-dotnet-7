@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Identity;
 namespace TODO.Data.Models{
     public class TodoItem{
         [Key]
-        public Guid Id {get; set;}
+        public Guid ItemId {get; set;}
         [ForeignKey("UserTodoItemForeignKey")]
         public IdentityUser User {get; set;}
         public string ItemName {get;set;}

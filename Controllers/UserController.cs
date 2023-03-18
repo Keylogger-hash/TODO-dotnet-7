@@ -17,7 +17,7 @@ namespace TODO.Controllers {
         }
 
         [HttpPost("register")]
-        public async Task<ActionResult<User>> RegisterUser(UserCreateDto user){
+        public async Task<ActionResult<UserDetailDto>> RegisterUser(UserCreateDto user){
             var identityUser = new IdentityUser(){UserName=user.UserName,Email=user.Email};
             var result  = await _userManager.CreateAsync(identityUser,user.Password);
             if (!result.Succeeded){
@@ -32,7 +32,7 @@ namespace TODO.Controllers {
         } 
 
         [HttpGet("{id}/get")]
-        public async Task<ActionResult<User>> GetDetailUserInfo(string id){
+        public async Task<ActionResult<UserDetailDto>> GetDetailUserInfo(string id){
             var user = await _userManager.FindByIdAsync(id);
             if (user == null){
                 return NotFound();

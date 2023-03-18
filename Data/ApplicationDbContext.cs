@@ -8,15 +8,21 @@ public class ApplicationDbContext: IdentityUserContext<IdentityUser>{
     public DbSet<TodoItem> TodoItems{get; set;}
     public DbSet<IdentityUser> User {get; set;}
     public DbSet<IdentityRole> Role {get; set;} 
+    public DbSet<Board> Boards{get; set;}
+    public DbSet<Workspace> Workspaces {get;set;}
+    public DbSet<WorkspaceMember> WorkspacesMembers {get; set;}
+    public DbSet<TodoComment> TodoComments {get;set;}
     public ApplicationDbContext(DbContextOptions options): base(options){
 
     }
     protected override void OnModelCreating(ModelBuilder modelBuilder){
         base.OnModelCreating(modelBuilder);
         this.SeedRoles(modelBuilder);
-        modelBuilder.Entity<TodoItem>().HasKey(i=>i.Id).HasName("TodoItemId_PrimaryKey");
+        modelBuilder.Entity<TodoItem>().HasKey(i=>i.ItemId).HasName("TodoItemId_PrimaryKey");
         modelBuilder.Entity<TodoItem>().Property(i=>i.IsCompleted).HasDefaultValue(false);
-        modelBuilder.Entity<>
+        modelBuilder.Entity<WorkspaceMember>().HasKey(wm => new {wm.WorkspaceId,wm.UserId});
+        modelBuilder.Entity<WorkspaceMember>().HasOne(wm=>wm.Workspace).WithMany(w=>w.WorkspaceMembers).HasForeignKey(wm=>wm.WorkspaceId);
+    
     }
 
     private void SeedRoles(ModelBuilder modelBuilder){

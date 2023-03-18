@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -9,9 +10,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace TODO.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230318173009_TodoComment")]
+    partial class TodoComment
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.3");
@@ -70,10 +73,6 @@ namespace TODO.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Discriminator")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
                     b.Property<string>("Email")
                         .HasMaxLength(256)
                         .HasColumnType("TEXT");
@@ -124,10 +123,6 @@ namespace TODO.Migrations
                         .HasDatabaseName("UserNameIndex");
 
                     b.ToTable("AspNetUsers", (string)null);
-
-                    b.HasDiscriminator<string>("Discriminator").HasValue("IdentityUser");
-
-                    b.UseTphMappingStrategy();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
@@ -296,6 +291,9 @@ namespace TODO.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
+                    b.Property<bool>("IsCompleted")
+                        .HasColumnType("INTEGER");
+
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("TEXT");
 
@@ -314,21 +312,18 @@ namespace TODO.Migrations
                     b.Property<Guid>("WorkspaceId")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("UserId")
+                    b.Property<int>("UserId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("UserId1")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("WorkspaceId", "UserId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserId1");
 
                     b.ToTable("WorkspacesMembers");
-                });
-
-            modelBuilder.Entity("TODO.Data.Models.ApplicationUser", b =>
-                {
-                    b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
-
-                    b.HasDiscriminator().HasValue("ApplicationUser");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
@@ -404,9 +399,9 @@ namespace TODO.Migrations
 
             modelBuilder.Entity("TODO.Data.Models.WorkspaceMember", b =>
                 {
-                    b.HasOne("TODO.Data.Models.ApplicationUser", "User")
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "User")
                         .WithMany()
-                        .HasForeignKey("UserId")
+                        .HasForeignKey("UserId1")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

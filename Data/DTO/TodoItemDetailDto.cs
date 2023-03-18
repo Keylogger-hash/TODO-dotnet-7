@@ -4,7 +4,7 @@
 
 namespace TODO.Data.DTO {
     public class TodoItemDetailDto {
-        public Guid Id {get;set;}
+        public Guid ItemId {get;set;}
         public string Username {get;set;}
         public string ItemName {get;set;}
 
